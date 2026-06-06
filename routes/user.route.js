@@ -7,7 +7,7 @@ const router = express.Router();
 router.use(requireAuth)
 
 router.get("/profile", getProfile);
-router.patch("/profile/:id", updateProfile);
+router.patch("/profile", updateProfile);
 router.delete("/delete", deleteAccount)
 
 export default router;

@@ -65,7 +65,7 @@ export const runAudit = async (req, res) => {
     const pagespeed = await getPageSpeedData(url);
     
     console.log("🤖 Sending to Gemini...");
-    const prompt = buildAuditPrompt({ domain: url, html, pagespeed });
+    const prompt = buildAuditPrompt({ domain: url, html: html.slice(0, 15000), pagespeed });
     const result = await geminiModel.generateContent([
       { text: prompt },
       { inlineData: { mimeType: "image/png", data: screenshotBase64 } },
