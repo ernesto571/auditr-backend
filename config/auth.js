@@ -47,7 +47,6 @@ export const auth = betterAuth({
     user: {
       create: {
         after: async (betterAuthUser) => {
-          console.log("🧑 New user created by Better Auth:", betterAuthUser);
           const nameParts = (betterAuthUser.name || "").trim().split(" ");
           const firstName = nameParts[0] || "Unknown";
           const lastName = nameParts.slice(1).join(" ") || "Unknown";
@@ -55,6 +54,15 @@ export const auth = betterAuth({
             INSERT INTO users (auth_id, email, first_name, last_name)
             VALUES (${betterAuthUser.id}, ${betterAuthUser.email}, ${firstName}, ${lastName})
             ON CONFLICT (email) DO NOTHING
+          `;
+        },
+      },
+    },
+    session: {
+      create: {
+        after: async (session) => {
+          await sql`
+            UPDATE users SET last_login = NOW() WHERE auth_id = ${session.userId}
           `;
         },
       },
