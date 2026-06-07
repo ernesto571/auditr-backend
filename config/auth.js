@@ -16,27 +16,15 @@ const pool = new Pool({
 const isProd = process.env.NODE_ENV === "production";
 
 export const auth = betterAuth({
-  secondaryStorage: {
-    get: async (key) => {
-      const [row] = await sql`SELECT value FROM auth_state WHERE key = ${key}`;
-      return row?.value ?? null;
-    },
-    set: async (key, value, ttl) => {
-      await sql`
-        INSERT INTO auth_state (key, value, expires_at)
-        VALUES (${key}, ${value}, ${ttl ? new Date(Date.now() + ttl * 1000) : null})
-        ON CONFLICT (key) DO UPDATE SET value = ${value}
-      `;
-    },
-    delete: async (key) => {
-      await sql`DELETE FROM auth_state WHERE key = ${key}`;
-    },
+  account: {
+    skipStateCookieCheck: true,
   },
   database: pool,
   baseURL: process.env.BETTER_AUTH_URL,
   trustedOrigins: [
     "http://localhost:5173",
     "http://localhost:3001",
+    "https://auditr-backend.up.railway.app",
     process.env.CLIENT_URL,
   ].filter(Boolean),
   advanced: {
