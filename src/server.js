@@ -64,6 +64,15 @@ async function initDB() {
       )
     `;
     console.log("✅ Better Auth verification table ready");
+    
+    await sql`
+      CREATE TABLE IF NOT EXISTS auth_state (
+        key TEXT PRIMARY KEY,
+        value TEXT NOT NULL,
+        expires_at TIMESTAMP
+      );
+    `
+    console.log("✅ Auth state table ready");
  
     await sql`
       CREATE TABLE IF NOT EXISTS users (
