@@ -33,8 +33,8 @@ export const auth = betterAuth({
     defaultCookieAttributes: {
       sameSite: "none",
       secure: true,
-      partitioned: true,
     },
+    cookiePrefix: "better-auth",
   },
   emailAndPassword: { enabled: true, minPasswordLength: 8, },
   socialProviders: {
